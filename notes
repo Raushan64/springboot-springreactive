@@ -1,0 +1,102 @@
+Reactive Programing
+------------------------
+
+Feature of Reactive Programing
+- Asynchronous & Non-Blocking
+     - Problem: Order the food from swiggy/Zomato, Resturent said to cook to prepare the food and once food has prepared then cook sent the message to Resturant people and finaly Resturent update to swiggy/Zomato like food is prepaired and available. Can you observed this, Resturant is completly blocked for the cook untill I not response backe from cook I am not accepting next order which is called as Synchronous and Blocking flow. To overcome this issue we use Reactive Programing as Asynchronous & Non-Blocking.
+
+     - Resturent are accepting N number of orders and cook prepared the food based on order priority, here Resturent are not waiting for the cook whether food is prepared nor not which is completly Asynchronous & Non-Blocking flow.
+
+- Functional Style code Vs Rest Code
+
+    - Tranditional Rest API Code
+
+    public void deleteUser(Integer userId){
+      userRepository.deleteById(userId)
+    }
+
+    - Reactive Programming Functional Style Code
+
+    public Mono<User> deletedUser(Integer userId){
+          return userRepository.findById(userId)
+                               .flateMap(esistingUser -> userRepository.delete(existingUser).then((Mono.just(esistingUser)))
+    }
+
+    Note: Mono is return type which accept N number of object.
+
+- Data flow as event driven stream.
+
+   - Tranditional Data flow: Client raised the request to application and app request into DB to persist/manage the data, but if some one modify the data in DB then how client khow whether data has modify in DB, that's come picture as event driven stream.
+
+   - Reactive Programming event driven stream: Client raised the request to application and app request into DB to persist/manage the data but if some one modify the data in DB then DB(publisher) Immidiatly fire the event and client(consumer) subscribe the message, in this case connection is always open.
+
+   Note: Example - Live Cricket Score
+
+- Backpressure on data stream
+
+  Get all the items from Inventory
+    - Tranditional Rest API: Aapplication send the request to DB to fetch the all items, DB send the large volume of data to app where app is not able to handle a huge amount of data or app may crash OutOfMemoryError because no Backpressure feature avail in Tranditional Rest API, that's come picture as Backpressure.
+    - Reactive Programming: Aapplication send the request to DB to fetch the all items, DB send the large volume of data to app then app said to DB hey let me process what ever data I have with me then you can post other data, means you have added limitation on Database driver how much data you are expecting. that's why It support feature of Backpressure.
+
+Specification
+--------------
+- It is rules to design the Reactive programing.
+- It contails 4 interfaces and each interface have some own methods.
+
+Publisher or Producer
+- Publisher is Data source who will always publish an events
+- The Subscriber need to call subscribe method to register into Publisher, and Publisher send the subscription event to Subscriber confirming that your subscription is successful.
+
+  public interface Publisher<T>{
+      public void subscribe(Subscriber<? super T> s);
+  }
+
+Subscriber or Consumer
+- It will subscribe/consume the events from Publisher.
+- If Subscriber find any error then onError(Throwable t) execute, if no errors then onComplete() execute, and each data transfer from Publisher to subscribe onNext(T t)  method execute(Let asume If Publisher Publishing 10 events then onNext(T t) will call 10 times)
+
+  public interface Subscriber<T> {
+    public void onSubscribe(Subscription s);
+    public void onNext(T t);
+    public void onError(Throwable t);
+    public void onComplete();
+  }
+
+Subscription
+- It represents the unique relationship between Subscriber and Publisher.
+- Subscriber call the request/cancel method to get the details or cancel from Publisher.
+
+  public interface Subscription{
+    public void request(long n);
+    public void cancel();
+  }
+
+Processor
+- It represents processing stage that acts as both a Subscriber and a Publisher, meaning it can receive data from an upstream Publisher and emit transformed data to a downstream Subscriber.
+- It must follow the contracts of both Publisher and Subscriber.
+
+  public interface Processor<T, R> extends Subscriber<T>, Publisher<R>{
+
+  }
+
+Reactive Stream Workflow
+---------------------------
+1. The Subscriber invoke subscribe method and pass the subscribe instance as input to Publisher and Publisher going to send the subscription event to Subscriber confirming that your subscription is successful.
+2. Subscriber call request(n) from Subscription interface to get the data from Publisher.
+3. Publisher send data stream to Subscriber by invoking onNext(data) method, if Publisher return 10 record then in this case Publisher will fire 10 times of onNext(data) events.
+4. Once all the record recieved to Subscriber then Publisher will invoke onComplete() method to confirming hey Subscriber I have done my Job, your execution is successful, if there is any errors then publisher will fire onError() event.
+5. There is option to Subscriber to ask limited number of data from Publisher, example let say Publisher have 10 items and you want to fetch 2 items then Subscriber can control that, that is Data Backpressure in Reactive Programing.
+
+Reactive Programming Liberary
+----------------------------------
+- Reactor (We will use this, This provide two data type like Flux/Mono)
+- RxJava
+- Jdk9 Flow Reactive Stream
+Note: Flux/Mono acts like Publisher, Mono create only one object but Flux create multiple object.
+
+Functional Endpoints
+----------------------
+Tranditional
+- As we work, client request in browser then request goes to controller by RequestMaping and controller call to service and Dao.
+Reactive
+- client request in browser then request goes to router and router route to handler and Dao.

@@ -1,0 +1,42 @@
+Asynchronous and Non-Blocking
+----------------------------------
+Traditional:
+- Subscriber do not get any record in browser Unless Publisher publish all records i.e Subscriber totally blocked until process all record by Publisher.
+- If Subscriber cancel/stop the request from browser then still Publisher publishing the record in background which is not required.
+
+url: GET http://localhost:9191/customers
+
+Reactive:
+- Once Publisher publish the record then Subscriber immediately get the record
+- If Subscriber cancel/stop the request from browser then immediately Publisher stop publishing the record and Subscriber stop getting the record in browser.
+
+url: GET http://localhost:9191/customers/stream
+
+Note: Browser is Subscriber and Dao-method is Publisher.
+
+
+Functional Endpoints
+----------------------
+Tranditional
+- As we work, client request in browser then request goes to controller by RequestMaping and controller call to service and Dao.
+- Publisher always publish the data in object.
+
+url: GET http://localhost:9191/customers
+
+Reactive
+- client request in browser then request goes to router and router route to handler and Dao.
+
+If you are not trying to achieve the stream then Publisher publish the data in object, and this still Synchronous blocking.
+url: GET http://localhost:9191/router/customers
+     GET http://localhost:9191/customers/{input}
+
+     POST http://localhost:9191/customers/save
+     Request Body: {
+                     "id": 5,
+                     "name": "kumar"
+                   }
+
+If you are trying to achieve the stream then in this case Publisher publish the data in stream not an object, and this ASynchronous non-blocking.
+url: GET http://localhost:9191/router/customers/stream
+
+
