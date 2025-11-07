@@ -79,8 +79,8 @@ Processor
 
   }
 
-Reactive Stream Workflow
----------------------------
+Reactive Stream Workflow (Architecture)
+-------------------------------------------
 1. The Subscriber invoke subscribe method and pass the subscribe instance as input to Publisher and Publisher going to send the subscription event to Subscriber confirming that your subscription is successful.
 2. Subscriber call request(n) from Subscription interface to get the data from Publisher.
 3. Publisher send data stream to Subscriber by invoking onNext(data) method, if Publisher return 10 record then in this case Publisher will fire 10 times of onNext(data) events.
