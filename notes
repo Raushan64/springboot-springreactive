@@ -100,3 +100,5 @@ Tranditional
 - As we work, client request in browser then request goes to controller by RequestMaping and controller call to service and Dao.
 Reactive
 - client request in browser then request goes to router and router route to handler and Dao.
+
+Note: you can see the workflow in JUnit Test case (MonoFluxTest)
