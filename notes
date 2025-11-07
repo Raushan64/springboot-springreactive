@@ -101,4 +101,4 @@ Tranditional
 Reactive
 - client request in browser then request goes to router and router route to handler and Dao.
 
-Note: you can see the workflow in JUnit Test case (MonoFluxTest)
+Note: you can see the workflow in program like JUnit Test case (MonoFluxTest)
